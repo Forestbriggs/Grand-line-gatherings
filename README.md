@@ -1908,7 +1908,7 @@ Delete an existing image for a Group.
   of the Group
 * Request
   * Method: DELETE
-  * URL: /api/groups/:groupId/images/:images
+  * URL: /api/groups/:groupId/images/:imageId
   * Body: none
 
 * Successful Response
