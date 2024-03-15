@@ -59,18 +59,3 @@ router.post('/', validateSignup, async (req, res) => {
 });
 
 module.exports = router;
-
-// fetch('/api/users', {
-//     method: 'POST',
-//     headers: {
-//         "Content-Type": "application/json",
-//         "XSRF-TOKEN": `<value of XSRF-TOKEN cookie>`
-//     },
-//     body: JSON.stringify({
-//         firstName: 'Fire',
-//         lastName: 'Star',
-//         email: 'firestar@spider.man',
-//         username: 'Firestar',
-//         password: ''
-//     })
-// }).then(res => res.json()).then(data => console.log(data));
