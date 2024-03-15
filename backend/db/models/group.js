@@ -59,7 +59,7 @@ module.exports = (sequelize, DataTypes) => {
         },
     }, {
         sequelize,
-        modelName: 'Groups',
+        modelName: 'Group',
     });
     return Group;
 };
