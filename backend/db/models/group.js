@@ -11,7 +11,8 @@ module.exports = (sequelize, DataTypes) => {
          */
         static associate(models) {
             Group.belongsTo(models.User, {
-                foreignKey: 'organizerId'
+                foreignKey: 'organizerId',
+                onDelete: 'CASCADE'
             })
         }
     }
