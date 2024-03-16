@@ -76,11 +76,32 @@ const crewsAndMembers = [
         name: 'Heart Pirates',
         crewMembers: [
             {
-                firstName: '',
-                lastName: '',
-                username: '',
-                email: '',
-                hashedPassword: bcrypt.hashSync('')
+                firstName: 'Bepo',
+                lastName: 'Bepo',
+                username: 'Bepo',
+                email: 'bepo@hearts.com',
+                hashedPassword: bcrypt.hashSync('B3arHug@dventure')
+            },
+            {
+                firstName: 'Jean',
+                lastName: 'Bart',
+                username: 'JeanBart',
+                email: 'jean@hearts.com',
+                hashedPassword: bcrypt.hashSync('L0yaltyBound!')
+            },
+            {
+                firstName: 'Penguin',
+                lastName: 'Penguin',
+                username: 'Penguin',
+                email: 'penguin@hearts.com',
+                hashedPassword: bcrypt.hashSync('!ceb3rgHideout')
+            },
+            {
+                firstName: 'Shachi',
+                lastName: 'Shachi',
+                username: 'Shachi',
+                email: 'shachi@hearts.com',
+                hashedPassword: bcrypt.hashSync('J0llyRogerCr3w!@')
             },
         ]
     },
@@ -88,23 +109,51 @@ const crewsAndMembers = [
         name: 'Donquixote Pirates',
         crewMembers: [
             {
-                firstName: '',
-                lastName: '',
-                username: '',
-                email: '',
-                hashedPassword: bcrypt.hashSync('')
+                firstName: 'Vergo',
+                lastName: 'Vergo',
+                username: 'Vergo',
+                email: 'vergo@donquixote.com',
+                hashedPassword: bcrypt.hashSync('L0yalty&Str3ngth')
             },
+            {
+                firstName: 'Trebol',
+                lastName: 'Trebol',
+                username: 'Trebol',
+                email: 'trebol@donquixote.com',
+                hashedPassword: bcrypt.hashSync('Mucu$M@5ter')
+            }
         ]
     },
     {
-        name: 'Marine',
+        name: 'Marines',
         crewMembers: [
             {
-                firstName: '',
-                lastName: '',
-                username: '',
-                email: '',
-                hashedPassword: bcrypt.hashSync('')
+                firstName: 'Borsalino',
+                lastName: 'Kizaru',
+                username: 'LightSpeedKizaru',
+                email: 'kizaru@marines.com',
+                hashedPassword: bcrypt.hashSync('L@ziness1sKey!')
+            },
+            {
+                firstName: 'Kuzan',
+                lastName: 'Aokiji',
+                username: 'IceColdAokiji',
+                email: 'aokiji@marines.com',
+                hashedPassword: bcrypt.hashSync('Ch1llOut!!')
+            },
+            {
+                firstName: 'Garp',
+                lastName: 'Garp',
+                username: 'FistOfJusticeGarp',
+                email: 'garp@marines.com',
+                hashedPassword: bcrypt.hashSync('Gr@andpa123')
+            },
+            {
+                firstName: 'Smoker',
+                lastName: 'Smoker',
+                username: 'Smoker',
+                email: 'smoker@marines.com',
+                hashedPassword: bcrypt.hashSync('Just!ceSmokescr33n')
             },
         ]
     },
@@ -112,11 +161,18 @@ const crewsAndMembers = [
         name: 'The Revolutionary Army',
         crewMembers: [
             {
-                firstName: '',
-                lastName: '',
-                username: '',
-                email: '',
-                hashedPassword: bcrypt.hashSync('')
+                firstName: 'Sabo',
+                lastName: 'Sabo',
+                username: 'FlameFistSabo',
+                email: 'sabo@revolutionists.com',
+                hashedPassword: bcrypt.hashSync('R!p@ce:(')
+            },
+            {
+                firstName: 'Ivankov',
+                lastName: 'Ivankov',
+                username: 'Ivankov',
+                email: 'ivankov@revolutionists.com',
+                hashedPassword: bcrypt.hashSync('R3volutionQueen!')
             },
         ]
     },
@@ -124,12 +180,19 @@ const crewsAndMembers = [
         name: 'Straw Hat Grand Fleet',
         crewMembers: [
             {
-                firstName: '',
-                lastName: '',
-                username: '',
-                email: '',
-                hashedPassword: bcrypt.hashSync('')
+                firstName: 'Bartolomeo',
+                lastName: 'Bartolomeo',
+                username: 'Bartolomeo',
+                email: 'bartolomeo@bartoclub.com',
+                hashedPassword: bcrypt.hashSync('Str@wHatFanboy123')
             },
+            {
+                firstName: 'Cavendish',
+                lastName: 'Cavendish',
+                username: 'GloriousCavendish',
+                email: 'cavendish@beautiful.com',
+                hashedPassword: bcrypt.hashSync('Wh!t3Horse')
+            }
         ]
     }
 ];
@@ -137,23 +200,31 @@ const crewsAndMembers = [
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
     async up(queryInterface, Sequelize) {
-        /**
-         * Add seed commands here.
-         *
-         * Example:
-         * await queryInterface.bulkInsert('People', [{
-         *   name: 'John Doe',
-         *   isBetaMember: false
-         * }], {});
-        */
+        for (let info of crewsAndMembers) {
+            const { name, crewMembers } = info;
+            const group = await Group.findOne({ where: { name } })
+
+            for (let crewInfo of crewMembers) {
+                try {
+                    await group.createUser({ ...crewInfo });
+                } catch (error) {
+                    console.log(error)
+                }
+            }
+        }
     },
 
     async down(queryInterface, Sequelize) {
-        /**
-         * Add commands to revert seed here.
-         *
-         * Example:
-         * await queryInterface.bulkDelete('People', null, {});
-         */
+        for (let info of crewsAndMembers) {
+            const { name, crewMembers } = info;
+            const group = await Group.findOne({ where: { name } })
+
+            for (let crewInfo of crewMembers) {
+                const { username } = crewInfo
+                const member = await User.findOne({ where: { username } });
+                await group.removeUser([member]);
+                await member.destroy();
+            }
+        }
     }
 };

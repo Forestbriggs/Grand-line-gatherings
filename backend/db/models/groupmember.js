@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
         status: {
             type: DataTypes.STRING,
             allowNull: false,
+            defaultValue: 'pending',
             validate: {
                 isIn: [['co-host', 'member', 'pending']]
             }
