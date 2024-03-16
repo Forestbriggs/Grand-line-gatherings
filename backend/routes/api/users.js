@@ -9,7 +9,7 @@ const { User } = require('../../db/models');
 
 const router = express.Router();
 
-// Middleware
+//* Middleware -----------------------------------------------------------------
 const validateSignup = [
     check('email')
         .exists({ checkFalsy: true })
@@ -30,8 +30,8 @@ const validateSignup = [
     handleValidationErrors
 ];
 
-// Routes
-// Sign Up
+//* Routes ---------------------------------------------------------------------
+//* Sign Up
 router.post('/', validateSignup, async (req, res) => {
     const { email, password, username, firstName, lastName } = req.body;
     const hashedPassword = bcrypt.hashSync(password);

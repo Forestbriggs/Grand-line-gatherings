@@ -5,6 +5,12 @@ const { getAllGroups } = require('../../utils/groups.js');
 
 const router = express.Router();
 
+//* Middleware -----------------------------------------------------------------
+
+
+
+//* Routes ---------------------------------------------------------------------
+
 router.get('/', getAllGroups)
 
 module.exports = router;
