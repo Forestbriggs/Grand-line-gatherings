@@ -5,7 +5,7 @@ const getAllGroups = async (req, res) => {
     let groups = await Group.findAll();
 
     //TODO create Images table to hold group images
-    groups = await Promise.all(groups.map(async (group) => {
+    await Promise.all(groups.map(async (group) => {
         group.dataValues.numMembers = await group.countUsers();
         group.dataValues.previewImage = '/some/url'
 
