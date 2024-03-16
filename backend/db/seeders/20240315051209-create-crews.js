@@ -56,7 +56,7 @@ const pirateCrews = [
         username: "FleetAdmiral101",
         groups: [
             {
-                name: "Marine",
+                name: "Marines",
                 about: "Every marine, from the lowliest recruit to the highest-ranking officer, plays a vital role in our mission. Together, we are an indomitable force, united by our unwavering commitment to duty and honor.",
                 type: "In person",
                 private: false,
