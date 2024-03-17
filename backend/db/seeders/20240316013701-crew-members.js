@@ -205,11 +205,7 @@ module.exports = {
             const group = await Group.findOne({ where: { name } })
 
             for (let crewInfo of crewMembers) {
-                try {
-                    await group.createUser({ ...crewInfo });
-                } catch (error) {
-                    console.log(error)
-                }
+                await group.createUser({ ...crewInfo });
             }
         }
     },
