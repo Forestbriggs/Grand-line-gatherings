@@ -1,7 +1,7 @@
 //* /backend/routes/api/groups.js
 const express = require('express');
 
-const { getAllGroups } = require('../../utils/groups.js');
+const { getAllGroups, getCurrentUserGroups } = require('../../utils/groups.js');
 
 const router = express.Router();
 
@@ -11,6 +11,8 @@ const router = express.Router();
 
 //* Routes ---------------------------------------------------------------------
 
-router.get('/', getAllGroups)
+router.get('/', getAllGroups);
+
+router.get('/current', getCurrentUserGroups);
 
 module.exports = router;

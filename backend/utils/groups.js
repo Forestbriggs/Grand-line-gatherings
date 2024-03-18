@@ -25,6 +25,21 @@ const getAllGroups = async (req, res) => {
     res.json({ Groups: groups })
 };
 
+const getCurrentUserGroups = async (req, res) => {
+    const id = req.user.id;
+
+    const orgGroups = await Group.findAll({
+        where: {
+            organizerId: id
+        }
+    });
+
+    //TODO get all groups joined by user
+
+    res.json(orgGroups);
+};
+
 module.exports = {
     getAllGroups,
+    getCurrentUserGroups
 }
