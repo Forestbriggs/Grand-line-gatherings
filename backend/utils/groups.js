@@ -1,6 +1,8 @@
 //* /backend/utils/groups.js
 const { Group, User, GroupMember, Image, sequelize } = require('../db/models');
 
+
+//* Route Functions ------------------------------------------------------------
 const getAllGroups = async (req, res, next) => {
     let groups = await Group.findAll({
         include: [
@@ -111,8 +113,26 @@ const getGroupById = async (req, res, next) => {
     res.json(group)
 };
 
+const createGroup = async (req, res, next) => {
+    const { name, about, type, private, city, state } = req.body;
+    const organizerId = req.user.id;
+
+    const group = await Group.create({
+        name,
+        about,
+        type,
+        private,
+        city,
+        state,
+        organizerId
+    });
+
+    return res.status(201).json(group);
+};
+
 module.exports = {
     getAllGroups,
     getCurrentUserGroups,
-    getGroupById
+    getGroupById,
+    createGroup
 }
