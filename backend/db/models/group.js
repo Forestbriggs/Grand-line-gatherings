@@ -17,9 +17,7 @@ module.exports = (sequelize, DataTypes) => {
             });
 
             Group.belongsTo(models.User, {
-                foreignKey: 'organizerId',
-                onDelete: 'CASCADE',
-                hooks: true
+                foreignKey: 'organizerId'
             });
 
             Group.hasMany(models.Image, {

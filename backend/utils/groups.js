@@ -1,5 +1,5 @@
 //* /backend/utils/groups.js
-const { Group, User, GroupMember, Image, sequelize } = require('../db/models');
+const { Group, User, GroupMember, Image, Venue, sequelize } = require('../db/models');
 
 
 //* Route Functions ------------------------------------------------------------
@@ -24,7 +24,7 @@ const getAllGroups = async (req, res, next) => {
         return group;
     }));
 
-    res.json({ Groups: groups })
+    return res.json({ Groups: groups })
 };
 
 const getCurrentUserGroups = async (req, res, next) => {
@@ -74,7 +74,7 @@ const getCurrentUserGroups = async (req, res, next) => {
         return group
     }));
 
-    res.json({
+    return res.json({
         Groups: groups
     });
 };
@@ -87,6 +87,10 @@ const getGroupById = async (req, res, next) => {
             {
                 model: Image,
                 attributes: ['id', 'url', 'preview']
+            },
+            {
+                model: Venue,
+                attributes: ['id', 'address', 'city', 'state', 'lat', 'lng']
             }
         ]
     });
@@ -108,9 +112,9 @@ const getGroupById = async (req, res, next) => {
         attributes: ['id', 'firstName', 'lastName']
     });
 
-    //TODO add venues once Venue model and seeders created
 
-    res.json(group)
+
+    return res.json(group)
 };
 
 const createGroup = async (req, res, next) => {
@@ -130,9 +134,103 @@ const createGroup = async (req, res, next) => {
     return res.status(201).json(group);
 };
 
+const addGroupImage = async (req, res, next) => {
+    const { groupId } = req.params;
+    const group = await Group.findByPk(groupId);
+
+    if (!group) {
+        const err = new Error("Group couldn't be found");
+        err.title = "Couldn't find a Group with the specified id";
+        // err.errors = { message: "Group couldn't be found" };
+        err.status = 404;
+        return next(err);
+    }
+
+    if (req.user.id !== group.organizerId) {
+        const err = new Error('Unauthorized');
+        err.title = 'Unauthorized';
+        err.errors = { message: 'Unauthorized' };
+        err.status = 401;
+        return next(err);
+    }
+
+
+    const { url, preview } = req.body;
+    const image = await group.createImage({ url, preview });
+
+    return res.json({
+        id: image.id,
+        url: image.url,
+        preview: image.preview
+    });
+};
+
+const editGroupById = async (req, res, next) => {
+    const { groupId } = req.params;
+    const group = await Group.findByPk(groupId);
+
+    if (!group) {
+        const err = new Error("Group couldn't be found");
+        err.title = "Couldn't find a Group with the specified id";
+        // err.errors = { message: "Group couldn't be found" };
+        err.status = 404;
+        return next(err);
+    }
+
+    if (req.user.id !== group.organizerId) {
+        const err = new Error('Unauthorized');
+        err.title = 'Unauthorized';
+        err.errors = { message: 'Unauthorized' };
+        err.status = 401;
+        return next(err);
+    }
+
+    const { name, about, type, private, city, state } = req.body;
+    await group.update({
+        name,
+        about,
+        type,
+        private,
+        city,
+        state
+    });
+
+    return res.json(group);
+};
+
+const deleteGroupById = async (req, res, next) => {
+    const { groupId } = req.params;
+    const group = await Group.findByPk(groupId);
+
+    if (!group) {
+        const err = new Error("Group couldn't be found");
+        err.title = "Couldn't find a Group with the specified id";
+        // err.errors = { message: "Group couldn't be found" };
+        err.status = 404;
+        return next(err);
+    }
+
+    if (req.user.id !== group.organizerId) {
+        const err = new Error('Unauthorized');
+        err.title = 'Unauthorized';
+        err.errors = { message: 'Unauthorized' };
+        err.status = 401;
+        return next(err);
+    }
+
+    await group.destroy();
+
+    return res.json({
+        message: "Successfully deleted"
+    });
+};
+
 module.exports = {
     getAllGroups,
     getCurrentUserGroups,
     getGroupById,
-    createGroup
+    createGroup,
+    addGroupImage,
+    editGroupById,
+    deleteGroupById
 }

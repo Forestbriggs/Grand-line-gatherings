@@ -1,7 +1,7 @@
 //* /backend/routes/api/groups.js
 const express = require('express');
 
-const { getAllGroups, getCurrentUserGroups, getGroupById, createGroup } = require('../../utils/groups.js');
+const { getAllGroups, getCurrentUserGroups, getGroupById, createGroup, addGroupImage, editGroupById, deleteGroupById } = require('../../utils/groups.js');
 const { requireAuth } = require('../../utils/auth.js');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
@@ -38,12 +38,18 @@ const validateBody = [
 
 //* Routes ---------------------------------------------------------------------
 
-router.get('/', getAllGroups);
-
 router.get('/current', requireAuth, getCurrentUserGroups);
 
-router.get('/:groupId', getGroupById)
+router.post('/:groupId/images', requireAuth, addGroupImage);
+
+router.put('/:groupId', requireAuth, validateBody, editGroupById);
+
+router.get('/:groupId', getGroupById);
+
+router.delete('/:groupId', requireAuth, deleteGroupById);
 
 router.post('/', requireAuth, validateBody, createGroup);
+
+router.get('/', getAllGroups);
 
 module.exports = router;
