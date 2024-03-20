@@ -28,11 +28,15 @@ module.exports = (sequelize, DataTypes) => {
                 scope: {
                     imageableType: 'Group'
                 }
-            })
+            });
 
             Group.hasMany(models.GroupMember, {
                 foreignKey: 'groupId'
-            })
+            });
+
+            Group.hasMany(models.Venue, {
+                foreignKey: 'groupId'
+            });
         }
     }
     Group.init({

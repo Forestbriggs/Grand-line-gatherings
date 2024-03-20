@@ -23,7 +23,7 @@ module.exports = {
             const group = await Group.findOne({ where: { name } });
 
             for (let image of images) {
-                await group.createImage({ ...image, imageableId: group.id });
+                await group.createImage({ ...image });
             }
         }
     },
@@ -34,11 +34,8 @@ module.exports = {
             const group = await Group.findOne({ where: { name } });
 
             for (let image of images) {
-                await group.destroy({
-                    where: {
-                        ...image, imageableId: group.id
-                    }
-                });
+                const img = await Image.findOne({ where: { ...image }, imageableId: group.id });
+                await img.destroy();
             }
         }
     }

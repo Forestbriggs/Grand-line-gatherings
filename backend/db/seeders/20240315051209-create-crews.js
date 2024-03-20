@@ -71,7 +71,7 @@ const pirateCrews = [
             {
                 name: "The Revolutionary Army",
                 about: "We are the Revolutionary Army, a force dedicated to challenging the oppressive regimes that plague our world and fighting for the freedom and equality of all people. Join us in our quest to usher in a new era of peace and prosperity for all!",
-                type: "In person",
+                type: "Online",
                 private: false,
                 city: "Unnamed Island",
                 state: "GL"
