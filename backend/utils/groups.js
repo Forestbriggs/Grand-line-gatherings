@@ -1,5 +1,5 @@
 //* /backend/utils/groups.js
-const { Group, User, GroupMember, Image, Venue, sequelize } = require('../db/models');
+const { Group, User, GroupMember, Image, Venue } = require('../db/models');
 
 
 //* Route Functions ------------------------------------------------------------
