@@ -24,13 +24,26 @@ module.exports = (sequelize, DataTypes) => {
         },
         state: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                len: [2, 2]
+            }
         },
         lat: {
             type: DataTypes.FLOAT,
+            allowNull: false,
+            validate: {
+                min: -90,
+                max: 90
+            }
         },
         lng: {
             type: DataTypes.FLOAT,
+            allowNull: false,
+            validate: {
+                min: -180,
+                max: 180
+            }
         },
         groupId: {
             type: DataTypes.INTEGER,
