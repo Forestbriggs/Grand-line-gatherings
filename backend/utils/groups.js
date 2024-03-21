@@ -225,6 +225,74 @@ const deleteGroupById = async (req, res, next) => {
     });
 };
 
+const getAllVenuesByGroupId = async (req, res, next) => {
+    const { groupId } = req.params;
+    const group = await Group.findByPk(groupId);
+
+    if (!group) {
+        const err = new Error("Group couldn't be found");
+        err.title = "Couldn't find a Group with the specified id";
+        // err.errors = { message: "Group couldn't be found" };
+        err.status = 404;
+        return next(err);
+    }
+
+    if (req.user.id !== group.organizerId) {
+        const err = new Error('Unauthorized');
+        err.title = 'Unauthorized';
+        err.errors = { message: 'Unauthorized' };
+        err.status = 401;
+        return next(err);
+    }
+
+    const venues = await group.getVenues({
+        attributes: ['id', 'groupId', 'address', 'city', 'state', 'lat', 'lng']
+    })
+
+    return res.json(venues);
+};
+
+const createVenueByGroupId = async (req, res, next) => {
+    const { groupId } = req.params;
+    const group = await Group.findByPk(groupId);
+
+    if (!group) {
+        const err = new Error("Group couldn't be found");
+        err.title = "Couldn't find a Group with the specified id";
+        // err.errors = { message: "Group couldn't be found" };
+        err.status = 404;
+        return next(err);
+    }
+
+    if (req.user.id !== group.organizerId) {
+        const err = new Error('Unauthorized');
+        err.title = 'Unauthorized';
+        err.errors = { message: 'Unauthorized' };
+        err.status = 401;
+        return next(err);
+    }
+
+    const { address, city, state, lat, lng } = req.body;
+    const venue = await group.createVenue({
+        address,
+        city,
+        state,
+        lat,
+        lng
+    });
+
+
+    return res.json({
+        id: venue.id,
+        groupId: venue.groupId,
+        address: venue.address,
+        city: venue.city,
+        state: venue.state,
+        lat: venue.lat,
+        lng: venue.lng
+    });
+};
+
 module.exports = {
     getAllGroups,
     getCurrentUserGroups,
@@ -232,5 +300,7 @@ module.exports = {
     createGroup,
     addGroupImage,
     editGroupById,
-    deleteGroupById
+    deleteGroupById,
+    getAllVenuesByGroupId,
+    createVenueByGroupId
 }

@@ -17,7 +17,7 @@ router.use('/session', sessionRouter); //* Login/logout
 
 router.use('/users', usersRouter); //* Signup/user routes
 
-router.use('/groups', groupsRouter)
+router.use('/groups', groupsRouter);
 
 router.post('/test', (req, res) => {
     res.json({ requestBody: req.body });
