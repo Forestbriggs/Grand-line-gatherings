@@ -1,5 +1,5 @@
 //* /backend/utils/groups.js
-const { Group, User, GroupMember, Image, Venue } = require('../db/models');
+const { Group, User, GroupMember, GroupImage, Venue, sequelize } = require('../db/models');
 
 
 //* Route Functions ------------------------------------------------------------
@@ -7,7 +7,7 @@ const getAllGroups = async (req, res, next) => {
     let groups = await Group.findAll({
         include: [
             {
-                model: Image,
+                model: GroupImage,
                 where: {
                     preview: true
                 },
@@ -18,8 +18,8 @@ const getAllGroups = async (req, res, next) => {
 
     await Promise.all(groups.map(async (group) => {
         group.dataValues.numMembers = await group.countUsers() + 1;
-        group.dataValues.previewImage = group.dataValues.Images[0]?.url || null;
-        delete group.dataValues.Images;
+        group.dataValues.previewImage = group.dataValues.GroupImages[0]?.url || null;
+        delete group.dataValues.GroupImages;
 
         return group;
     }));
@@ -36,7 +36,7 @@ const getCurrentUserGroups = async (req, res, next) => {
         },
         include: [
             {
-                model: Image,
+                model: GroupImage,
                 where: {
                     preview: true
                 },
@@ -55,7 +55,7 @@ const getCurrentUserGroups = async (req, res, next) => {
                 }
             },
             {
-                model: Image,
+                model: GroupImage,
                 where: {
                     preview: true
                 },
@@ -68,8 +68,8 @@ const getCurrentUserGroups = async (req, res, next) => {
 
     groups = await Promise.all(groups.map(async (group) => {
         group.dataValues.numMembers = await group.countUsers() + 1;
-        group.dataValues.previewImage = group.dataValues.Images[0]?.url || null;
-        delete group.dataValues.Images;
+        group.dataValues.previewImage = group.dataValues.GroupImages[0]?.url || null;
+        delete group.dataValues.GroupImages;
 
         return group
     }));
@@ -85,7 +85,7 @@ const getGroupById = async (req, res, next) => {
     const group = await Group.findByPk(groupId, {
         include: [
             {
-                model: Image,
+                model: GroupImage,
                 attributes: ['id', 'url', 'preview']
             },
             {
@@ -104,9 +104,6 @@ const getGroupById = async (req, res, next) => {
     }
 
     group.dataValues.numMembers = await group.countUsers() + 1;
-
-    group.dataValues.GroupImages = group.dataValues.Images;
-    delete group.dataValues.Images
 
     group.dataValues.Organizer = await User.unscoped().findByPk(group.dataValues.organizerId, {
         attributes: ['id', 'firstName', 'lastName']
@@ -156,7 +153,7 @@ const addGroupImage = async (req, res, next) => {
 
 
     const { url, preview } = req.body;
-    const image = await group.createImage({ url, preview });
+    const image = await group.createGroupImage({ url, preview });
 
     return res.json({
         id: image.id,

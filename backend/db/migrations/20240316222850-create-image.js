@@ -8,20 +8,12 @@ if (process.env.NODE_ENV === 'production') {
 
 module.exports = {
     async up(queryInterface, Sequelize) {
-        await queryInterface.createTable('Images', {
+        await queryInterface.createTable('GroupImages', {
             id: {
                 allowNull: false,
                 autoIncrement: true,
                 primaryKey: true,
                 type: Sequelize.INTEGER
-            },
-            imageableId: {
-                type: Sequelize.INTEGER,
-                allowNull: false
-            },
-            imageableType: {
-                type: Sequelize.STRING,
-                allowNull: false
             },
             url: {
                 type: Sequelize.STRING,
@@ -29,6 +21,10 @@ module.exports = {
             },
             preview: {
                 type: Sequelize.BOOLEAN,
+                allowNull: false
+            },
+            groupId: {
+                type: Sequelize.INTEGER,
                 allowNull: false
             },
             createdAt: {
@@ -44,7 +40,7 @@ module.exports = {
         }, options);
     },
     async down(queryInterface, Sequelize) {
-        options.table = 'Images';
+        options.table = 'GroupImages';
         await queryInterface.dropTable(options);
     }
 };
