@@ -2,7 +2,7 @@
 
 /** @type {import('sequelize-cli').Migration} */
 
-const { Group, Image } = require('../models');
+const { Group, GroupImage } = require('../models');
 
 const groupImages = [
     {
@@ -23,7 +23,7 @@ module.exports = {
             const group = await Group.findOne({ where: { name } });
 
             for (let image of images) {
-                await group.createImage({ ...image });
+                await group.createGroupImage({ ...image });
             }
         }
     },
@@ -34,7 +34,7 @@ module.exports = {
             const group = await Group.findOne({ where: { name } });
 
             for (let image of images) {
-                const img = await Image.findOne({ where: { ...image }, imageableId: group.id });
+                const img = await GroupImage.findOne({ where: { ...image }, groupId: group.id });
                 await img.destroy();
             }
         }
