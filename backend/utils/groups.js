@@ -1,5 +1,5 @@
 //* /backend/utils/groups.js
-const { Group, User, GroupMember, GroupImage, Venue, sequelize } = require('../db/models');
+const { Group, User, GroupMember, GroupImage, Venue } = require('../db/models');
 
 
 //* Route Functions ------------------------------------------------------------
@@ -222,6 +222,7 @@ const deleteGroupById = async (req, res, next) => {
     });
 };
 
+//TODO implement co-host auth
 const getAllVenuesByGroupId = async (req, res, next) => {
     const { groupId } = req.params;
     const group = await Group.findByPk(groupId);
@@ -249,6 +250,7 @@ const getAllVenuesByGroupId = async (req, res, next) => {
     return res.json(venues);
 };
 
+//TODO implement co-host auth
 const createVenueByGroupId = async (req, res, next) => {
     const { groupId } = req.params;
     const group = await Group.findByPk(groupId);
@@ -256,7 +258,6 @@ const createVenueByGroupId = async (req, res, next) => {
     if (!group) {
         const err = new Error("Group couldn't be found");
         err.title = "Couldn't find a Group with the specified id";
-        // err.errors = { message: "Group couldn't be found" };
         err.status = 404;
         return next(err);
     }
