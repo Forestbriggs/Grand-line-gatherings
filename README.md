@@ -1,4 +1,4 @@
-# Meetup
+# Meetup Clone
 
 ## Database Schema Design
 
@@ -117,7 +117,7 @@ information.
         "lastName": "Smith",
         "email": "john.smith@gmail.com",
         "username": "JohnSmith"
-      }
+      } 
     }
     ```
 
@@ -644,7 +644,7 @@ Returns all venues for a group specified by its id
       }
     ]
   }
-
+  
   ```
 
 * Error response: Couldn't find a Group with the specified id
@@ -1383,7 +1383,7 @@ Request a new membership for a group specified by id.
 * Require Authentication: true
 * Request
   * Method: POST
-  * URL: /api/groups/:groupId/members
+  * URL: /api/groups/:groupId/membership
   * Headers:
     * Content-Type: application/json
   * Body: none
@@ -1451,7 +1451,7 @@ Change the status of a membership for a group specified by id.
     * Current User must already be the organizer
 * Request
   * Method: PUT
-  * URL: /api/groups/:groupId/members
+  * URL: /api/groups/:groupId/membership
   * Headers:
     * Content-Type: application/json
   * Body:
@@ -1538,7 +1538,7 @@ Delete a membership to a group specified by id.
   the user whose membership is being deleted
 * Request
   * Method: DELETE
-  * URL: /api/groups/:groupId/members/:memberId
+  * URL: /api/groups/:groupId/membership/:memberId
   * Headers:
     * Content-Type: application/json
   * Body: none
@@ -1693,7 +1693,7 @@ Request attendance for an event specified by id.
 * Require Authorization: Current User must be a member of the group
 * Request
   * Method: POST
-  * URL: /api/events/:eventId/attendees
+  * URL: /api/events/:eventId/attendance
   * Headers:
     * Content-Type: application/json
   * Body: none
@@ -1757,7 +1757,7 @@ Change the status of an attendance for an event specified by id.
   have a membership to the group with the status of "co-host"
 * Request
   * Method: PUT
-  * URL: /api/events/:eventId/attendees
+  * URL: /api/events/:eventId/attendance
   * Headers:
     * Content-Type: application/json
   * Body:
@@ -1844,7 +1844,7 @@ Delete an attendance to an event specified by id.
   the user whose attendance is being deleted
 * Request
   * Method: DELETE
-  * URL: /api/events/:eventId/attendees/:userId
+  * URL: /api/events/:eventId/attendance/:userId
   * Headers:
     * Content-Type: application/json
   * Body: none
@@ -1908,7 +1908,7 @@ Delete an existing image for a Group.
   of the Group
 * Request
   * Method: DELETE
-  * URL: /api/groups/:groupId/images/:imageId
+  * URL: /api/group-images/:imageId
   * Body: none
 
 * Successful Response
@@ -1944,7 +1944,7 @@ Delete an existing image for an Event.
   of the Group that the Event belongs to
 * Request
   * Method: DELETE
-  * URL: /api/events/:eventId/images/:imageId
+  * URL: /api/event-images/:imageId
   * Body: none
 
 * Successful Response
