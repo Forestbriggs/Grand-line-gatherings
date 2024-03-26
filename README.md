@@ -1,4 +1,5 @@
-# Meetup Clone
+# Grand Line Gatherings
+
 
 ## Database Schema Design
 
