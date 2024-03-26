@@ -68,8 +68,8 @@ const getCurrentUserGroups = async (req, res, next) => {
 
     groups = await Promise.all(groups.map(async (group) => {
         group.dataValues.numMembers = await group.countUsers() + 1;
-        group.dataValues.previewImage = group.dataValues.GroupImage[0]?.url || null;
-        delete group.dataValues.GroupImage;
+        group.dataValues.previewImage = group.dataValues.GroupImages[0]?.url || null;
+        delete group.dataValues.GroupImages;
 
         return group
     }));
@@ -104,9 +104,6 @@ const getGroupById = async (req, res, next) => {
     }
 
     group.dataValues.numMembers = await group.countUsers() + 1;
-
-    group.dataValues.GroupImages = group.dataValues.GroupImages;
-    delete group.dataValues.GroupImages
 
     group.dataValues.Organizer = await User.unscoped().findByPk(group.dataValues.organizerId, {
         attributes: ['id', 'firstName', 'lastName']
