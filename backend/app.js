@@ -18,7 +18,7 @@ const routes = require('./routes');
 // * Initialize express app
 const app = express();
 
-// * Initialize middlewares
+// * Initialize middlewares ----------------------------------------------------
 
 // * Logs info about requests and responses 
 app.use(morgan('dev'));
@@ -51,10 +51,11 @@ app.use(
     })
 );
 
-// * Connect all the routes
+// * Connect all the routes ----------------------------------------------------
+
 app.use(routes);
 
-// * Error handling
+// * Error handling ------------------------------------------------------------
 
 // * Catch unhandled requests and forward to error handler
 app.use((_req, _res, next) => {

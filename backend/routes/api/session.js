@@ -9,7 +9,7 @@ const { User } = require('../../db/models');
 
 const router = express.Router();
 
-// Middlewares
+//* Middlewares ---------------------------------------------------------------- 
 const validateLogin = [
     check('credential')
         .exists({ checkFalsy: true })
@@ -21,8 +21,8 @@ const validateLogin = [
     handleValidationErrors
 ];
 
-// Routes
-// Restore session user
+//* Routes ---------------------------------------------------------------------
+//* Restore session user
 router.get('/', (req, res) => {
     const { user } = req;
 
@@ -41,7 +41,7 @@ router.get('/', (req, res) => {
     } else return res.json({ user: null });
 });
 
-// Login
+//* Login
 router.post('/', validateLogin, async (req, res, next) => {
     const { credential, password } = req.body;
 
@@ -77,7 +77,7 @@ router.post('/', validateLogin, async (req, res, next) => {
     });
 });
 
-// Logout
+//* Logout
 router.delete('/', (_req, res) => {
     res.clearCookie('token');
     return res.json({ message: 'success' });
