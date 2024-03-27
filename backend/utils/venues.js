@@ -50,8 +50,6 @@ const editVenueById = async (req, res, next) => {
         lng
     });
 
-    delete venue.dataValues.Group;
-
     return res.json({
         id: venue.id,
         groupId: venue.groupId,
