@@ -1,7 +1,9 @@
 //* /backend/routes/api/groups.js
 const express = require('express');
 
-const { getAllGroups, getCurrentUserGroups, getGroupById, createGroup, addGroupImage, editGroupById, deleteGroupById } = require('../../utils/groups.js');
+const { getAllGroups, getCurrentUserGroups, getGroupById, createGroup,
+    addGroupImage, editGroupById, deleteGroupById, getAllVenuesByGroupId,
+    createVenueByGroupId } = require('../../utils/groups.js');
 const { requireAuth } = require('../../utils/auth.js');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
@@ -9,7 +11,7 @@ const { handleValidationErrors } = require('../../utils/validation');
 const router = express.Router();
 
 //* Middleware -----------------------------------------------------------------
-const validateBody = [
+const validateGroupBody = [
     check('name')
         .exists({ checkFalsy: true })
         .isLength({ max: 60 })
@@ -36,19 +38,44 @@ const validateBody = [
     handleValidationErrors
 ];
 
+const validateVenueBody = [
+    check('address')
+        .exists({ checkFalsy: true })
+        .withMessage('Street address is required'),
+    check('city')
+        .exists({ checkFalsy: true })
+        .withMessage('City is required'),
+    check('state')
+        .exists({ checkFalsy: true })
+        .withMessage('State is required'),
+    check('lat')
+        .exists({ checkFalsy: true })
+        .isFloat({ min: -90, max: 90 })
+        .withMessage('Latitude must be within -90 and 90'),
+    check('lng')
+        .exists({ checkFalsy: true })
+        .isFloat({ min: -180, max: 180 })
+        .withMessage('Longitude must be within -180 and 180'),
+    handleValidationErrors
+];
+
 //* Routes ---------------------------------------------------------------------
 
 router.get('/current', requireAuth, getCurrentUserGroups);
 
 router.post('/:groupId/images', requireAuth, addGroupImage);
 
-router.put('/:groupId', requireAuth, validateBody, editGroupById);
+router.get('/:groupId/venues', requireAuth, getAllVenuesByGroupId);
+
+router.post('/:groupId/venues', requireAuth, validateVenueBody, createVenueByGroupId)
+
+router.put('/:groupId', requireAuth, validateGroupBody, editGroupById);
 
 router.get('/:groupId', getGroupById);
 
 router.delete('/:groupId', requireAuth, deleteGroupById);
 
-router.post('/', requireAuth, validateBody, createGroup);
+router.post('/', requireAuth, validateGroupBody, createGroup);
 
 router.get('/', getAllGroups);
 
