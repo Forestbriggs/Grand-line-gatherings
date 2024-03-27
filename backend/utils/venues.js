@@ -4,6 +4,9 @@ const { Venue, Group, GroupMember } = require('../db/models');
 const editVenueById = async (req, res, next) => {
     const { venueId } = req.params;
     const venue = await Venue.findByPk(venueId, {
+        attributes: {
+            exclude: ['createdAt', 'updatedAt']
+        },
         include: [
             {
                 model: Group,

@@ -252,7 +252,9 @@ const getAllVenuesByGroupId = async (req, res, next) => {
     }
 
     const venues = await group.getVenues({
-        attributes: ['id', 'groupId', 'address', 'city', 'state', 'lat', 'lng']
+        attributes: {
+            exclude: ['createdAt', 'updatedAt']
+        }
     })
 
     return res.json(venues);
