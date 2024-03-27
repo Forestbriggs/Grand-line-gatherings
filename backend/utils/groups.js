@@ -98,7 +98,6 @@ const getGroupById = async (req, res, next) => {
     if (!group) {
         const err = new Error("Group couldn't be found");
         err.title = "Couldn't find a Group with the specified id";
-        // err.errors = { message: "Group couldn't be found" };
         err.status = 404;
         return next(err);
     }
@@ -138,7 +137,6 @@ const addGroupImage = async (req, res, next) => {
     if (!group) {
         const err = new Error("Group couldn't be found");
         err.title = "Couldn't find a Group with the specified id";
-        // err.errors = { message: "Group couldn't be found" };
         err.status = 404;
         return next(err);
     }
@@ -169,7 +167,6 @@ const editGroupById = async (req, res, next) => {
     if (!group) {
         const err = new Error("Group couldn't be found");
         err.title = "Couldn't find a Group with the specified id";
-        // err.errors = { message: "Group couldn't be found" };
         err.status = 404;
         return next(err);
     }
@@ -202,7 +199,6 @@ const deleteGroupById = async (req, res, next) => {
     if (!group) {
         const err = new Error("Group couldn't be found");
         err.title = "Couldn't find a Group with the specified id";
-        // err.errors = { message: "Group couldn't be found" };
         err.status = 404;
         return next(err);
     }
@@ -222,25 +218,37 @@ const deleteGroupById = async (req, res, next) => {
     });
 };
 
-//TODO implement co-host auth
 const getAllVenuesByGroupId = async (req, res, next) => {
     const { groupId } = req.params;
-    const group = await Group.findByPk(groupId);
+    const group = await Group.findByPk(groupId, {
+        include: [
+            {
+                model: GroupMember,
+                where: {
+                    memberId: req.user.id
+                },
+                required: false
+            }
+        ]
+    });
+
 
     if (!group) {
         const err = new Error("Group couldn't be found");
         err.title = "Couldn't find a Group with the specified id";
-        // err.errors = { message: "Group couldn't be found" };
         err.status = 404;
         return next(err);
     }
 
     if (req.user.id !== group.organizerId) {
-        const err = new Error('Unauthorized');
-        err.title = 'Unauthorized';
-        err.errors = { message: 'Unauthorized' };
-        err.status = 401;
-        return next(err);
+
+        if (group.GroupMembers[0]?.dataValues.status !== 'co-host') {
+            const err = new Error('Unauthorized');
+            err.title = 'Unauthorized';
+            err.errors = { message: 'Unauthorized' };
+            err.status = 401;
+            return next(err);
+        }
     }
 
     const venues = await group.getVenues({
@@ -250,10 +258,19 @@ const getAllVenuesByGroupId = async (req, res, next) => {
     return res.json(venues);
 };
 
-//TODO implement co-host auth
 const createVenueByGroupId = async (req, res, next) => {
     const { groupId } = req.params;
-    const group = await Group.findByPk(groupId);
+    const group = await Group.findByPk(groupId, {
+        include: [
+            {
+                model: GroupMember,
+                where: {
+                    memberId: req.user.id
+                },
+                required: false
+            }
+        ]
+    });
 
     if (!group) {
         const err = new Error("Group couldn't be found");
@@ -263,11 +280,14 @@ const createVenueByGroupId = async (req, res, next) => {
     }
 
     if (req.user.id !== group.organizerId) {
-        const err = new Error('Unauthorized');
-        err.title = 'Unauthorized';
-        err.errors = { message: 'Unauthorized' };
-        err.status = 401;
-        return next(err);
+
+        if (group.GroupMembers[0]?.dataValues.status !== 'co-host') {
+            const err = new Error('Unauthorized');
+            err.title = 'Unauthorized';
+            err.errors = { message: 'Unauthorized' };
+            err.status = 401;
+            return next(err);
+        }
     }
 
     const { address, city, state, lat, lng } = req.body;
