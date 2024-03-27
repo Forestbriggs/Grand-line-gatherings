@@ -50,9 +50,15 @@ const editVenueById = async (req, res, next) => {
         lng
     });
 
-    delete venue.dataValues.Group;
-
-    return res.json(venue);
+    return res.json({
+        id: venue.id,
+        groupId: venue.groupId,
+        address: venue.address,
+        city: venue.city,
+        state: venue.state,
+        lat: venue.lat,
+        lng: venue.lng
+    });
 };
 
 module.exports = {
